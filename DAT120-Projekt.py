@@ -19,7 +19,7 @@ spiller1Poeng = 0
 spiller2Poeng = 0
 spiller1Svar = ""
 spiller2Svar = ""
-class FlervalgSpørsmål:
+class Sporsmaal:
     def __init__(self,spørsmål, riktigSvar, svaralternativListe):
         self.spørsmål = spørsmål
         self.riktigSvar = riktigSvar
@@ -78,7 +78,7 @@ def lagOppgaveListen(filMedOppgaver):
             Ukomfortabel med denne måten å få inn den nøstede listen på
             Føler det burde være en bedre måte, men fant den ikke
             """
-            listen.append(FlervalgSpørsmål(linjeListe[0], linjeListe[1], linjeListe[2]))
+            listen.append(Sporsmaal(linjeListe[0], linjeListe[1], linjeListe[2]))
         except:
             print(f"Problem med behandlig av spørsmål {linjeListe[0]} \nKoden forsetter, men uten dette spørsmålet")
         
