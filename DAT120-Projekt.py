@@ -7,13 +7,18 @@ Created on Fri Oct 22 18:20:31 2021
 
 
 """
+
+
 ferdig = True
 navnPåSpørsmålsfila = "sporsmaalsfil.txt"
 """
 Endre på variabelen her oppe for å gjøre det letter å endre på den
 """
 oppgaveListen = []
-
+spiller1Poeng = 0
+spiller2Poeng = 0
+spiller1Svar = ""
+spiller2Svar = ""
 class FlervalgSpørsmål:
     def __init__(self,spørsmål, riktigSvar, svaralternativListe):
         self.spørsmål = spørsmål
@@ -24,16 +29,21 @@ class FlervalgSpørsmål:
         for alternativ in self.svaralternativListe:
             self.printStreng = self.printStreng + f"{aIndex}: {alternativ} \n"
             aIndex = aIndex +1
+        """
         self.printStreng = self.printStreng + "Ditt svar: "
+        """
     
     def __str__(self):
         return f"{self.printStreng}"
     
     def sjekk_svar(self, svar):
-        if svar == self.riktigSvar:
+        if svar == self.riktigSvar + 1:
             return True
         else:
             return False
+    
+    def korrekt_svar_tekst(self): 
+        return self.svaralternativListe[self.riktigSvar]
 
 def sjekkLovligInput(inputFraBruker):
     while ferdig != False:
@@ -62,11 +72,12 @@ def lagOppgaveListen(filMedOppgaver):
         
         try:
             linjeListe[1] = int(linjeListe[1])
-            
-            for b in linjeListe[2]:
-                print(b)
-            
-            
+            linjeListe[2] = linjeListe[2].translate({ord(i): None for i in '[]'})
+            linjeListe[2] = linjeListe[2].split(',')
+            """
+            Ukomfortabel med denne måten å få inn den nøstede listen på
+            Føler det burde være en bedre måte, men fant den ikke
+            """
             listen.append(FlervalgSpørsmål(linjeListe[0], linjeListe[1], linjeListe[2]))
         except:
             print(f"Problem med behandlig av spørsmål {linjeListe[0]} \nKoden forsetter, men uten dette spørsmålet")
@@ -77,10 +88,36 @@ def lagOppgaveListen(filMedOppgaver):
 if __name__== "__main__":
     
     oppgaveFil = lesInnOppgaveFil()
-    oppgaveListen = lagOppgaveListen(oppgaveFil)
+    oppgaveListen = lagOppgaveListen(lesInnOppgaveFil())
     
-    print(oppgaveListen[2])
+    print("Dette er et spill for 2 spillere \nVelg selv hvem som er spiller 1 og 2")
+    for oppgave in oppgaveListen:
+        print(oppgave)
+        spiller1Svar = sjekkLovligInput(input("Spiller 1 sitt svar: "))
+        spiller2Svar = sjekkLovligInput(input("Spiller 2 sitt svar: "))
+        
+        print(f"Riktig svar er: {oppgave}")
+        
+        if oppgave.sjekk_svar(spiller1Svar):
+            print("Spiller 1: Riktig")
+            spiller1Poeng = spiller1Poeng + 1
+        else:
+            print("Spiller 1: Feil")
+            
+        if oppgave.sjekk_svar(spiller2Svar):
+            print("Spiller 2: Riktig\n")
+            spiller2Poeng = spiller2Poeng + 1
+        else:
+            print("Spiller 2: Feil\n")
     
+    print(f"Spiller 1 poengsum: {spiller1Poeng}")
+    print(f"Spiller 2 poengsum: {spiller2Poeng}")
     
-    print("yes")    
+    if spiller1Poeng > spiller2Poeng:
+        print("Spiller 1 Vinner!!")
+    elif spiller2Poeng > spiller1Poeng:
+        print("Spiller 2 Vinner!!")
+    else:
+        print("Det er uavgjort.")
+    
     oppgaveFil.close()
